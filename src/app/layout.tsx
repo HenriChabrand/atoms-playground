@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Suspense } from "react";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,11 +17,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full dark">
+    <html lang="en" className="h-full dark" suppressHydrationWarning>
       <body
         className={`${inter.className} bg-[#FCFCFC] dark:bg-[#090D0D] min-h-screen m-0 p-0`}
       >
-        <ThemeProvider />
+        <Suspense fallback={null}>
+          <ThemeProvider />
+        </Suspense>
         {children}
       </body>
     </html>

@@ -1,12 +1,13 @@
 import { ConnectionWrapper } from "./connection-wrapper";
 import { createSession } from "./actions";
+import { Suspense } from "react";
 
 export default async function Page({
   params,
   searchParams,
 }: {
-  params: { connectorId: string; ownerId: string };
-  searchParams: { dark?: string };
+  params: Promise<{ connectorId: string; ownerId: string }>;
+  searchParams: Promise<{ dark?: string }>;
 }) {
   const { connectorId, ownerId } = await params;
   const { dark } = await searchParams;
@@ -30,11 +31,13 @@ export default async function Page({
       className="flex flex-col items-center min-h-screen pt-4 gap-8"
     >
       <div className="w-full">
-        <ConnectionWrapper
-          sessionToken={result.data.sessionToken}
-          connectorId={connectorId}
-          ownerId={ownerId}
-        />
+        <Suspense fallback={<div>Loading connection...</div>}>
+          <ConnectionWrapper
+            sessionToken={result.data.sessionToken}
+            connectorId={connectorId}
+            ownerId={ownerId}
+          />
+        </Suspense>
       </div>
     </div>
   );
