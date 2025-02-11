@@ -96,11 +96,13 @@ export function ConnectionWrapper({
     <div className="pt-4">
       <div className="mx-auto">
         <div className="flex items-center space-x-4 mb-8">
-          <ConnectorSelect
-            defaultValue={connectorId as ConnectorId}
-            ownerId={ownerId}
-            onUnavailableConnector={handleUnavailableConnector}
-          />
+          <React.Suspense fallback={<div>Loading connector select...</div>}>
+            <ConnectorSelect
+              defaultValue={connectorId as ConnectorId}
+              ownerId={ownerId}
+              onUnavailableConnector={handleUnavailableConnector}
+            />
+          </React.Suspense>
           <ConnectCard
             sessionToken={sessionToken}
             connectorId={connectorId}
