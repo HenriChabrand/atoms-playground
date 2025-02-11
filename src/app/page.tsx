@@ -8,5 +8,5 @@ export default async function Page({
   const ownerId = `temp_${Date.now()}`;
   const { theme } = await searchParams;
   const themeParam = theme === "light" ? "?theme=light" : "";
-  redirect(`/${ownerId}/connectors/salesforce${themeParam}`);
+  redirect(`/${ownerId}/connectors/hubspot${themeParam}`);
 }
