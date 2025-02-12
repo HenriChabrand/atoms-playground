@@ -2,6 +2,7 @@ import { ConnectionWrapper } from "./connection-wrapper";
 import { createSession } from "./actions";
 import { Suspense } from "react";
 import { availableConnectorIds } from "@/lib/connectors";
+import { redirect } from "next/navigation";
 
 export default async function Page({
   params,
@@ -13,6 +14,13 @@ export default async function Page({
   const { connectorId, ownerId } = await params;
   const { dark } = await searchParams;
   const isDark = dark === "true";
+
+  // Redirect if ownerId is "temp"
+  if (ownerId === "temp") {
+    const newOwnerId = `temp_${Date.now()}`;
+    const darkParam = isDark ? "?dark=true" : "";
+    redirect(`/${newOwnerId}/connectors/${connectorId}${darkParam}`);
+  }
 
   if (!connectorId) return <p>No connector id provided</p>;
   let publicKey = "pk_demo_xxxxxxxxxxxxxxx";
