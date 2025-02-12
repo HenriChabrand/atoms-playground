@@ -694,10 +694,10 @@
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
-"@runmorph/atoms@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@runmorph/atoms/-/atoms-0.0.4.tgz#0a244fe92aa89bca2d097994cf51aae659f0cd49"
-  integrity sha512-Uw4gpjUdq23Zc0+NfXnjGR2CanHgI6u0zzxX/RCmH2VwynV2xzh8MTjDSf999RWDR7SiyTaqwBBwWQvCg9wbdA==
+"@runmorph/atoms@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@runmorph/atoms/-/atoms-0.0.6.tgz#51da0f522f3cc3e386004760ce73d5ed00c81a83"
+  integrity sha512-l08O2bDZ8WtSDDhEPIva9bdPqHCrENGtsWZlAEB9OtMCZ0QTTKlt8hJ1JQek5/W9t7Tq7hqAhkfQKOauJLuu+Q==
   dependencies:
     "@hookform/resolvers" "^3.10.0"
     "@radix-ui/react-label" "^2.1.2"
