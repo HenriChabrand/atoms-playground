@@ -9,7 +9,9 @@ import { useSearchParams } from "next/navigation";
 import {
   type ConnectorId,
   ConnectorSelect,
+  getConnectorName,
 } from "@/components/connector-select";
+import { availableConnectorIds } from "@/lib/connectors";
 
 interface ConnectionWrapperProps {
   sessionToken: string;
@@ -28,23 +30,36 @@ export function ConnectionWrapper({
   >(null);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [selectedConnector, setSelectedConnector] = React.useState(connectorId);
+  const [publicKey, setPublicKey] = React.useState("pk_demo_xxxxxxxxxxxxxxx");
+  const [mockedConnectionFirst, setMockedConnectionFirst] =
+    React.useState<boolean>(true);
   const searchParams = useSearchParams();
   const themeParam =
     searchParams.get("theme") === "light" ? "?theme=light" : "";
 
   // Handle unavailable connector selection
-  const handleUnavailableConnector = (message: string) => {
-    setUnavailableMessage(message);
+  const handleUnavailableConnector = (connectorId: string) => {
+    setUnavailableMessage(getConnectorName(connectorId));
     setErrorMessage(null);
+    setSelectedConnector(connectorId); // Force ContactsTable remount
     setIsConnected(false);
-    setSelectedConnector(`unavailable-${Date.now()}`); // Force ContactsTable remount
   };
 
-  // Reset all states when connector changes
+  // Set public key based on connector availability
   React.useEffect(() => {
-    setUnavailableMessage(null);
-    setErrorMessage(null);
-    setIsConnected(false);
+    if (availableConnectorIds.includes(connectorId)) {
+      setErrorMessage(null);
+      setUnavailableMessage(null);
+      setPublicKey(
+        process.env.NEXT_PUBLIC_MORPH_PUBLIC_KEY ?? "pk_demo_xxxxxxxxxxxxxxx"
+      );
+    } else {
+      setErrorMessage(null);
+      setUnavailableMessage(getConnectorName(connectorId));
+      setPublicKey("pk_demo_xxxxxxxxxxxxxxx");
+      setIsConnected(false);
+      setMockedConnectionFirst(true);
+    }
     setSelectedConnector(connectorId);
   }, [connectorId]);
 
@@ -52,8 +67,13 @@ export function ConnectionWrapper({
   React.useEffect(() => {
     const checkConnection = async () => {
       try {
+        if (!connectorId) return <p>No connector id provided</p>;
+        if (publicKey === "pk_demo_xxxxxxxxxxxxxxx" && mockedConnectionFirst) {
+          setMockedConnectionFirst(false);
+          return;
+        }
         const morph = Morph({
-          publicKey: process.env.NEXT_PUBLIC_MORPH_PUBLIC_KEY!,
+          publicKey,
         });
         const connection = morph.connections({ sessionToken });
         const { data, error } = await connection.retrieve();
@@ -77,7 +97,7 @@ export function ConnectionWrapper({
     };
 
     checkConnection();
-  }, [sessionToken, connectorId]);
+  }, [sessionToken, connectorId, publicKey]);
 
   const connectionCallbacks: ConnectionCallbacks = {
     authorized: () => {
@@ -104,6 +124,7 @@ export function ConnectionWrapper({
             />
           </React.Suspense>
           <ConnectCard
+            publicKey={publicKey}
             sessionToken={sessionToken}
             connectorId={connectorId}
             connectionCallbacks={connectionCallbacks}
@@ -118,36 +139,47 @@ export function ConnectionWrapper({
 
         {unavailableMessage && !isConnected && !errorMessage && (
           <div className="mb-8 p-4 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg text-yellow-800 dark:text-yellow-200">
-            {unavailableMessage} can&apos;t be tested in the playground as it
-            requires a custom CLIENT_ID and CLIENT_SECRET. Try another connector
-            like{" "}
-            <a
-              href={`/${ownerId}/connectors/salesforce${themeParam}`}
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              Salesforce
-            </a>{" "}
-            or{" "}
-            <a
-              href={`/${ownerId}/connectors/hubspot${themeParam}`}
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              HubSpot
-            </a>{" "}
-            – or{" "}
-            <a
-              href={`https://cal.com/morphhq/sign-up-onboarding`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              book a demo
-            </a>{" "}
-            to test {unavailableMessage} live ✨
+            <p>
+              {unavailableMessage} is using mocked data in the playground as it
+              requires a private <code>CLIENT_ID</code> and{" "}
+              <code>CLIENT_SECRET</code>.
+            </p>
+            <p>
+              You can still test the authorization flow by clicking the menu (
+              ⠇) and selecting &quot;Re-authorize&quot;
+            </p>
+            <br />
+            <p>
+              Try one of our playground-ready connectors like{" "}
+              <a
+                href={`/${ownerId}/connectors/salesforce${themeParam}`}
+                className="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                Salesforce
+              </a>{" "}
+              or{" "}
+              <a
+                href={`/${ownerId}/connectors/hubspot${themeParam}`}
+                className="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                HubSpot
+              </a>{" "}
+              – or{" "}
+              <a
+                href={`https://cal.com/morphhq/sign-up-onboarding`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                book a demo
+              </a>{" "}
+              to test {unavailableMessage} live ✨
+            </p>
           </div>
         )}
 
         <ContactsTable
+          connectorId={connectorId}
           isConnected={isConnected}
           sessionToken={sessionToken}
           key={selectedConnector}

@@ -3,17 +3,21 @@
 import { Morph } from "@runmorph/cloud";
 import type { ConnectorId } from "@/components/connector-select";
 
-const morph = Morph({
-  publicKey: process.env.NEXT_PUBLIC_MORPH_PUBLIC_KEY!,
-  secretKey: process.env.MORPH_SECRET_KEY,
-});
 export async function createSession({
   ownerId,
   connectorId,
+  publicKey,
+  secretKey,
 }: {
   ownerId: string;
   connectorId: ConnectorId;
+  publicKey: string;
+  secretKey: string;
 }) {
+  const morph = Morph({
+    publicKey,
+    secretKey,
+  });
   return await morph.sessions().create({
     connection: {
       connectorId: connectorId as "hubspot",
@@ -23,7 +27,16 @@ export async function createSession({
   });
 }
 
-export async function listContacts(sessionToken: string) {
+export async function listContacts({
+  sessionToken,
+  publicKey,
+}: {
+  sessionToken: string;
+  publicKey: string;
+}) {
+  const morph = Morph({
+    publicKey,
+  });
   return await morph
     .connections({ sessionToken })
     .resources("genericContact")

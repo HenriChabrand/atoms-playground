@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "../components/ui/table";
 import { listContacts } from "../app/[ownerId]/connectors/[connectorId]/actions";
+import { availableConnectorIds } from "@/lib/connectors";
 
 interface Contact {
   id: string;
@@ -21,11 +22,13 @@ interface Contact {
 interface ContactsTableProps {
   isConnected: boolean;
   sessionToken: string;
+  connectorId: string;
 }
 
 export function ContactsTable({
   isConnected,
   sessionToken,
+  connectorId,
 }: ContactsTableProps) {
   const [contacts, setContacts] = React.useState<Contact[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -38,7 +41,13 @@ export function ContactsTable({
       try {
         setIsLoading(true);
         setError(null);
-        const result = await listContacts(sessionToken);
+
+        let publicKey = "pk_demo_xxxxxxxxxxxxxxx";
+
+        if (availableConnectorIds.includes(connectorId)) {
+          publicKey = process.env.NEXT_PUBLIC_MORPH_PUBLIC_KEY ?? publicKey;
+        }
+        const result = await listContacts({ sessionToken, publicKey });
 
         if (!isMounted) return;
 

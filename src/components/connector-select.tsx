@@ -113,6 +113,16 @@ export const connectors = [
 
 export type ConnectorId = (typeof connectors)[number]["id"];
 
+/**
+ * Gets the display name of a connector by its ID
+ * @param connectorId - The ID of the connector
+ * @returns The display name of the connector, or the ID if not found
+ */
+export function getConnectorName(connectorId: string): string {
+  const connector = connectors.find((c) => c.id === connectorId);
+  return connector?.label ?? connectorId;
+}
+
 interface ConnectorSelectProps {
   defaultValue?: ConnectorId;
   className?: string;
@@ -124,7 +134,6 @@ export function ConnectorSelect({
   defaultValue,
   ownerId,
   className,
-  onUnavailableConnector,
 }: ConnectorSelectProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(defaultValue || "");
@@ -170,17 +179,9 @@ export function ConnectorSelect({
                   onSelect={(currentValue) => {
                     setValue(currentValue);
                     setOpen(false);
-                    if (
-                      ["hubspot", "salesforce", "pipedrive"].includes(
-                        currentValue
-                      )
-                    ) {
-                      router.push(
-                        `/${ownerId}/connectors/${currentValue}${themeParam}`
-                      );
-                    } else {
-                      onUnavailableConnector?.(connector.label);
-                    }
+                    router.push(
+                      `/${ownerId}/connectors/${currentValue}${themeParam}`
+                    );
                   }}
                 >
                   <Image

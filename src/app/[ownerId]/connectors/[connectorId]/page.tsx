@@ -1,6 +1,7 @@
 import { ConnectionWrapper } from "./connection-wrapper";
 import { createSession } from "./actions";
 import { Suspense } from "react";
+import { availableConnectorIds } from "@/lib/connectors";
 
 export default async function Page({
   params,
@@ -14,15 +15,31 @@ export default async function Page({
   const isDark = dark === "true";
 
   if (!connectorId) return <p>No connector id provided</p>;
+  let publicKey = "pk_demo_xxxxxxxxxxxxxxx";
+  let secretKey = "sk_demo_xxxxxxxxxxxxxxx";
+  let finalOwnerId = "demo";
 
+  if (availableConnectorIds.includes(connectorId)) {
+    publicKey = process.env.NEXT_PUBLIC_MORPH_PUBLIC_KEY ?? publicKey;
+    secretKey = process.env.MORPH_SECRET_KEY ?? secretKey;
+    finalOwnerId = ownerId;
+  }
+
+  console.log({ publicKey, secretKey, finalOwnerId, connectorId });
   // Create session on the server
   const result = await createSession({
-    ownerId,
+    publicKey,
+    secretKey,
+    ownerId: finalOwnerId,
     connectorId: connectorId as "hubspot",
   });
-
+  console.log(result.error);
   if (result.error) {
-    return <p>Could not create morph sessionToken</p>;
+    return (
+      <p>
+        Could not create morph sessionToken for this connector in this demo.
+      </p>
+    );
   }
 
   return (
