@@ -1,6 +1,5 @@
 "use client";
-import { MorphProvider } from "@runmorph/atoms";
-import { Connect } from "@runmorph/atoms";
+import { Connect, Morph } from "@runmorph/atoms";
 import type { ConnectionCallbacks } from "@runmorph/atoms";
 
 interface ConnectCardProps {
@@ -16,11 +15,11 @@ export function ConnectCard({
   publicKey,
 }: ConnectCardProps) {
   return (
-    <MorphProvider config={{ publicKey }}>
+    <Morph.Provider config={{ publicKey }}>
       <Connect
         sessionToken={sessionToken}
         connectionCallbacks={connectionCallbacks}
       />
-    </MorphProvider>
+    </Morph.Provider>
   );
 }

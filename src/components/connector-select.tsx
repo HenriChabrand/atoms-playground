@@ -28,7 +28,7 @@ export const connectors = [
   { id: "acuity-scheduling", label: "Acuity Scheduling" },
   { id: "airtable", label: "Airtable" },
   { id: "anthropic", label: "Anthropic" },
-  // { id: "asana", label: "Asana" },
+  { id: "asana", label: "Asana" },
   { id: "affinity", label: "Affinity" },
   { id: "attio", label: "Attio" },
   { id: "blackbaud", label: "Blackbaud" },

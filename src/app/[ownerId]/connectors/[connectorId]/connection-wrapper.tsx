@@ -30,7 +30,7 @@ export function ConnectionWrapper({
   >(null);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [selectedConnector, setSelectedConnector] = React.useState(connectorId);
-  const [publicKey, setPublicKey] = React.useState("pk_demo_xxxxxxxxxxxxxxx");
+  const [publicKey, setPublicKey] = React.useState<string | null>(null);
   const [mockedConnectionFirst, setMockedConnectionFirst] =
     React.useState<boolean>(true);
   const searchParams = useSearchParams();
@@ -68,6 +68,7 @@ export function ConnectionWrapper({
     const checkConnection = async () => {
       try {
         if (!connectorId) return <p>No connector id provided</p>;
+        if (!publicKey) return;
         if (publicKey === "pk_demo_xxxxxxxxxxxxxxx" && mockedConnectionFirst) {
           setMockedConnectionFirst(false);
           return;
