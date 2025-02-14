@@ -109,6 +109,10 @@ export const connectors = [
   { id: "wrike", label: "Wrike" },
   { id: "zoho-mail", label: "Zoho Mail" },
   { id: "fal-ai", label: "fal.ai" },
+  { id: "workable", label: "Workable" },
+  { id: "lever", label: "Lever" },
+  { id: "greenhouse", label: "Greenhouse" },
+  { id: "ashby", label: "Ashby" },
 ] as const;
 
 export type ConnectorId = (typeof connectors)[number]["id"];
