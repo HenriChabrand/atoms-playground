@@ -30,7 +30,7 @@ export function ConnectionWrapper({
   >(null);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [selectedConnector, setSelectedConnector] = React.useState(connectorId);
-  const [publicKey, setPublicKey] = React.useState<string | null>(null);
+  const [publicKey, setPublicKey] = React.useState<string | undefined>();
   const [mockedConnectionFirst, setMockedConnectionFirst] =
     React.useState<boolean>(true);
   const searchParams = useSearchParams();

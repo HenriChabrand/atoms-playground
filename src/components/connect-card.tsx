@@ -5,7 +5,7 @@ import type { ConnectionCallbacks } from "@runmorph/atoms";
 interface ConnectCardProps {
   sessionToken: string;
   connectorId: string;
-  publicKey: string;
+  publicKey?: string;
   connectionCallbacks?: ConnectionCallbacks;
 }
 
@@ -14,6 +14,7 @@ export function ConnectCard({
   connectionCallbacks,
   publicKey,
 }: ConnectCardProps) {
+  if (!publicKey) return;
   return (
     <Morph.Provider config={{ publicKey }}>
       <Connect
