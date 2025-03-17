@@ -33,7 +33,6 @@ export default async function Page({
     finalOwnerId = ownerId;
   }
 
-  console.log({ publicKey, secretKey, finalOwnerId, connectorId });
   // Create session on the server
   const result = await createSession({
     publicKey,

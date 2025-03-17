@@ -142,11 +142,22 @@ export function ConnectorSelect({
   className,
 }: ConnectorSelectProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(defaultValue || "");
+  const [displayValue] = React.useState(defaultValue || "");
   const router = useRouter();
   const searchParams = useSearchParams();
   const themeParam =
     searchParams.get("theme") === "light" ? "?theme=light" : "";
+
+  // Handle connector selection without changing the button display
+  const handleConnectorSelect = (selectedConnectorId: string) => {
+    // Close the popover
+    setOpen(false);
+
+    // Only redirect if a different connector is selected
+    if (selectedConnectorId !== displayValue) {
+      router.push(`/${ownerId}/connectors/${selectedConnectorId}${themeParam}`);
+    }
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -159,14 +170,15 @@ export function ConnectorSelect({
         >
           <div className="flex space-x-2">
             <Image
-              src={`/connector-icons/${value}.svg`}
+              src={`/connector-icons/${displayValue}.svg`}
               alt={`connector icon`}
               width={18}
               height={18}
               className="mr-2"
             />
-            {value
-              ? connectors.find((connector) => connector.id === value)?.label
+            {displayValue
+              ? connectors.find((connector) => connector.id === displayValue)
+                  ?.label
               : "Select a connector"}
           </div>
           <ChevronsUpDown className="opacity-50" />
@@ -183,11 +195,7 @@ export function ConnectorSelect({
                   key={connector.id}
                   value={connector.id}
                   onSelect={(currentValue) => {
-                    setValue(currentValue);
-                    setOpen(false);
-                    router.push(
-                      `/${ownerId}/connectors/${currentValue}${themeParam}`
-                    );
+                    handleConnectorSelect(currentValue);
                   }}
                 >
                   <Image
@@ -201,7 +209,9 @@ export function ConnectorSelect({
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === connector.id ? "opacity-100" : "opacity-0"
+                      displayValue === connector.id
+                        ? "opacity-100"
+                        : "opacity-0"
                     )}
                   />
                 </CommandItem>
