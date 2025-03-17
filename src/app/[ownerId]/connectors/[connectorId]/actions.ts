@@ -44,3 +44,27 @@ export async function listContacts({
       limit: 3,
     });
 }
+
+export async function getModelWithListOperations({
+  sessionToken,
+  publicKey,
+}: {
+  sessionToken: string;
+  publicKey: string;
+}) {
+  const morph = Morph({
+    publicKey,
+  });
+  const { data, error } = await morph
+    .connections({ sessionToken })
+    .getConnector();
+  if (error) throw error;
+
+  // @ts-expect-error – to remove one new /cloud version pubished
+  return data.operations
+    ? // @ts-expect-error – to remove one new /cloud version pubished
+      data.operations
+        .filter((op: string) => op.endsWith("::list"))
+        .map((op: string) => op.split("::")[0])
+    : [];
+}
