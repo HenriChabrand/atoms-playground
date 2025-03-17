@@ -60,10 +60,8 @@ export async function getModelWithListOperations({
     .getConnector();
   if (error) throw error;
 
-  // @ts-expect-error – to remove one new /cloud version pubished
   return data.operations
-    ? // @ts-expect-error – to remove one new /cloud version pubished
-      data.operations
+    ? data.operations
         .filter((op: string) => op.endsWith("::list"))
         .map((op: string) => op.split("::")[0])
     : [];
