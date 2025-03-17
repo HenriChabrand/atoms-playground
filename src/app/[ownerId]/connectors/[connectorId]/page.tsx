@@ -41,8 +41,9 @@ export default async function Page({
     ownerId: finalOwnerId,
     connectorId: connectorId as "hubspot",
   });
-  console.log(result.error);
+
   if (result.error) {
+    console.log(result.error);
     return (
       <p>
         Could not create morph sessionToken for this connector in this demo.

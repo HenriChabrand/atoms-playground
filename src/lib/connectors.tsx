@@ -1,1 +1,8 @@
-export const availableConnectorIds = ["hubspot", "salesforce", "pipedrive"];
+export const availableConnectorIds = [
+  "hubspot",
+  "salesforce",
+  "aircall",
+  "gong",
+  "dialpad",
+  "calendly",
+];
