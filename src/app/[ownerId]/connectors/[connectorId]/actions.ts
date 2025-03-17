@@ -18,13 +18,15 @@ export async function createSession({
     publicKey,
     secretKey,
   });
-  return await morph.sessions().create({
+  const sessionData = await morph.sessions().create({
     connection: {
       connectorId: connectorId as "hubspot",
       ownerId: ownerId,
       operations: ["genericContact::retrieve"],
     },
   });
+
+  return sessionData;
 }
 
 export async function listContacts({

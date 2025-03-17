@@ -64,7 +64,7 @@ export function ConnectionWrapper({
   }, [connectorId]);
 
   // Check connection status when connector changes
-  /* React.useEffect(() => {
+  React.useEffect(() => {
     const checkConnection = async () => {
       try {
         if (!connectorId) return <p>No connector id provided</p>;
@@ -97,8 +97,8 @@ export function ConnectionWrapper({
       }
     };
 
-    // checkConnection();
-  }, [sessionToken, connectorId, publicKey]);*/
+    checkConnection();
+  }, [sessionToken, connectorId, publicKey]);
 
   const connectionCallbacks: ConnectionCallbacks = {
     authorized: () => {
