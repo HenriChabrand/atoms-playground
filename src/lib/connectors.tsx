@@ -1,4 +1,5 @@
 export const availableConnectorIds = [
+  "attio",
   "hubspot",
   "salesforce",
   "aircall",
