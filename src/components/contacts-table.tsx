@@ -286,7 +286,7 @@ interface ContactsTableProps {
 const CACHE_EXPIRATION = 24 * 60 * 60 * 1000;
 
 // Helper function to update a resource field
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const updateResource = async ({
   sessionToken,
   publicKey,
@@ -310,11 +310,11 @@ const updateResource = async ({
   return await morph
     .connections({ sessionToken })
     .resources(modelId)
+    // @ts-expect-error - Morph SDK typing limitations
     .update(resourceId, {
       [field]: value,
-    } as any);
+    });
 };
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 // Helper function to determine if a value is editable (string or number)
 const isEditableValue = (value: unknown): boolean => {
